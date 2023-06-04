@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class Hotel {
@@ -37,24 +38,26 @@ public class Hotel {
     }
 
     private boolean roomDesired(Room room, boolean standard, boolean ensuite, boolean penthouse) {
-        if (room instanceof StandardRoom) {
-            if (standard)
-                return true;
-            else
-                return false;
-        } else if (room instanceof EnsuiteRoom) {
-            if (ensuite)
-                return true;
-            else
-                return false;
-        } else if (room instanceof PenthouseRoom) {
-            if (penthouse)
-                return true;
-            else
-                return false;
-        } else {
-            return false;
-        }
+        // if (room instanceof StandardRoom) {
+        //     if (standard)
+        //         return true;
+        //     else
+        //         return false;
+        // } else if (room instanceof EnsuiteRoom) {
+        //     if (ensuite)
+        //         return true;
+        //     else
+        //         return false;
+        // } else if (room instanceof PenthouseRoom) {
+        //     if (penthouse)
+        //         return true;
+        //     else
+        //         return false;
+        // } else {
+        //     return false;
+        // }
+        return room instanceof StandardRoom && standard || room instanceof EnsuiteRoom && ensuite
+                || room instanceof PenthouseRoom && penthouse;
     }
 
     /**
@@ -62,7 +65,14 @@ public class Hotel {
      * { "name": name, "rooms": [ each room as a JSON object, in order of creation ]}
      */
     public JSONObject toJSON() {
-        return null;
+        JSONObject hotel = new JSONObject();
+        hotel.put("name", name);
+        JSONArray roomsJSON = new JSONArray();
+        for (Room room : rooms) {
+            roomsJSON.put(room.toJSON());
+        }
+        hotel.put("rooms", roomsJSON);
+        return hotel;
     }
 
     public String getName() {
@@ -70,38 +80,38 @@ public class Hotel {
     }
 
     public void addRoom(String roomType) {
-        Room room = null;
+        // Room room = null;
 
-        switch (roomType) {
-        case "standard":
-            room = new StandardRoom();
-            break;
-        case "ensuite":
-            room = new EnsuiteRoom();
-            break;
-        case "penthouse":
-            room = new PenthouseRoom();
-            break;
-        default:
-            break;
-        }
-
-        rooms.add(room);
-
-        // Which is better design/style?
         // switch (roomType) {
         // case "standard":
-        //     rooms.add(new StandardRoom());
+        //     room = new StandardRoom();
         //     break;
         // case "ensuite":
-        //     rooms.add(new EnsuiteRoom());
+        //     room = new EnsuiteRoom();
         //     break;
         // case "penthouse":
-        //     rooms.add(new PenthouseRoom());
+        //     room = new PenthouseRoom();
         //     break;
         // default:
         //     break;
         // }
+
+        // rooms.add(room);
+
+        // Which is better design/style?
+        switch (roomType) {
+        case "standard":
+            rooms.add(new StandardRoom());
+            break;
+        case "ensuite":
+            rooms.add(new EnsuiteRoom());
+            break;
+        case "penthouse":
+            rooms.add(new PenthouseRoom());
+            break;
+        default:
+            break;
+        }
 
     }
 }

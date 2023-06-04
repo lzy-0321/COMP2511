@@ -29,7 +29,7 @@ public class Booking {
      * @param end
      */
     public boolean overlaps(LocalDate start, LocalDate end) {
-        return false;
+        return start.isBefore(departure) && end.isAfter(arrival);
     }
 
 }

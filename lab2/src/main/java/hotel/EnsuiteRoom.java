@@ -24,8 +24,10 @@ public class EnsuiteRoom implements Room {
 
     @Override
     public JSONObject toJSON() {
-        // TODO add your code here
-        return null;
+        JSONObject room = new JSONObject();
+        room.put("type", "ensuite");
+        room.put("bookings", bookings);
+        return room;
     }
 
     @Override

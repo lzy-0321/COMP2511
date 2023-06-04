@@ -4,6 +4,7 @@ import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 
 public class StandardRoom implements Room {
@@ -24,8 +25,14 @@ public class StandardRoom implements Room {
 
     @Override
     public JSONObject toJSON() {
-        // TODO
-        return null;
+        JSONObject room = new JSONObject();
+        room.put("type", "standard");
+        JSONArray bookings = new JSONArray();
+        for (Booking booking : this.bookings) {
+            bookings.put(booking.toJSON());
+        }
+        room.put("bookings", bookings);
+        return room;
     }
 
     @Override

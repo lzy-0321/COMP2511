@@ -24,8 +24,10 @@ public class PenthouseRoom implements Room {
 
     @Override
     public JSONObject toJSON() {
-        // TODO Auto-generated method stub
-        return null;
+        JSONObject room = new JSONObject();
+        room.put("type", "penthouse");
+        room.put("bookings", bookings);
+        return room;
     }
 
     @Override

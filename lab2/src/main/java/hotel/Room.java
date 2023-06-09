@@ -1,10 +1,15 @@
 package hotel;
 
 import java.time.LocalDate;
+import java.util.ArrayList;
+import java.util.List;
+import org.json.JSONArray;
 
 import org.json.JSONObject;
 
-public interface Room {
+public abstract class Room {
+    private List<Booking> bookings = new ArrayList<Booking>();
+
     /**
      * Checks if the room is not booked out during the given time.
      * If so, creates a booking for the room at that time.
@@ -12,7 +17,17 @@ public interface Room {
      * @param departure
      * @return The booking object if the booking succeeded, null if failed
      */
-    public Booking book(LocalDate arrival, LocalDate departure);
+    public Booking book(LocalDate arrival, LocalDate departure) {
+        for (Booking booking : bookings) {
+            if (booking.overlaps(arrival, departure)) {
+                return null;
+            }
+        }
+
+        Booking booking = new Booking(arrival, departure);
+        bookings.add(booking);
+        return booking;
+    }
 
     /**
      * @return A JSON object of the form:
@@ -21,11 +36,28 @@ public interface Room {
      *  "type": the type of the room (standard, ensuite, penthouse)
      * }
      */
-    public JSONObject toJSON();
+    public JSONObject toJSON() {
+        JSONArray bookingsArr = new JSONArray();
+        for (Booking booking : bookings) {
+            bookingsArr.put(booking.toJSON());
+        }
+        JSONObject room = new JSONObject();
+        room.put("bookings", bookingsArr);
+        return room;
+    }
 
     /**
      * Prints a welcome message to the guest staying in the room.
      */
-    public void printWelcomeMessage();
-
+    public void printWelcomeMessage() {
+        if (this instanceof EnsuiteRoom) {
+            System.out.println(
+                    "Welcome to your beautiful ensuite room which overlooks the Sydney harbour. Enjoy your stay");
+        } else if (this instanceof PenthouseRoom) {
+            System.out.println(
+                    "Welcome to your penthouse apartment, complete with ensuite, lounge, kitchen and master bedroom.");
+        } else if (this instanceof StandardRoom) {
+            System.out.println("Welcome to your standard room. Enjoy your stay :)");
+        }
+    }
 }

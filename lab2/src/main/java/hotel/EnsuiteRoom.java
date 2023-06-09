@@ -1,39 +1,25 @@
 package hotel;
 
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-
 import org.json.JSONObject;
 
-public class EnsuiteRoom implements Room {
-    private List<Booking> bookings = new ArrayList<Booking>();
-
+public class EnsuiteRoom extends Room {
+    //private List<Booking> bookings = new ArrayList<Booking>();
     @Override
     public Booking book(LocalDate arrival, LocalDate departure) {
-        for (Booking booking : bookings) {
-            if (booking.overlaps(arrival, departure)) {
-                return null;
-            }
-        }
-
-        Booking booking = new Booking(arrival, departure);
-        bookings.add(booking);
-        return booking;
+        return super.book(arrival, departure);
     }
 
     @Override
     public JSONObject toJSON() {
-        JSONObject room = new JSONObject();
+        JSONObject room = super.toJSON();
         room.put("type", "ensuite");
-        room.put("bookings", bookings);
         return room;
     }
 
     @Override
     public void printWelcomeMessage() {
-        System.out
-                .println("Welcome to your beautiful ensuite room which overlooks the Sydney harbour. Enjoy your stay");
+        super.printWelcomeMessage();
     }
 
 }

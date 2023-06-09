@@ -49,15 +49,5 @@ public abstract class Room {
     /**
      * Prints a welcome message to the guest staying in the room.
      */
-    public void printWelcomeMessage() {
-        if (this instanceof EnsuiteRoom) {
-            System.out.println(
-                    "Welcome to your beautiful ensuite room which overlooks the Sydney harbour. Enjoy your stay");
-        } else if (this instanceof PenthouseRoom) {
-            System.out.println(
-                    "Welcome to your penthouse apartment, complete with ensuite, lounge, kitchen and master bedroom.");
-        } else if (this instanceof StandardRoom) {
-            System.out.println("Welcome to your standard room. Enjoy your stay :)");
-        }
-    }
+    abstract void printWelcomeMessage();
 }

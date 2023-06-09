@@ -20,7 +20,8 @@ public class EnsuiteRoom extends Room {
 
     @Override
     public void printWelcomeMessage() {
-        super.printWelcomeMessage();
+        System.out
+                .println("Welcome to your beautiful ensuite room which overlooks the Sydney harbour. Enjoy your stay");
     }
 
 }

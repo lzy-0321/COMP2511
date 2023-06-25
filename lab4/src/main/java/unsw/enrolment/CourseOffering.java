@@ -8,13 +8,13 @@ import java.util.stream.Collectors;
 
 import unsw.enrolment.exceptions.InvalidEnrolmentException;
 
-public class CourseOffering extends Course {
+public class CourseOffering {
     private Course course;
     private String term;
     private List<Enrolment> enrolments = new ArrayList<Enrolment>();
 
     public CourseOffering(Course course, String term) {
-        super(course.getCourseCode(), course.getTitle());
+        this.course = course;
         this.course = course;
         this.term = term;
         this.course.addOffering(this);

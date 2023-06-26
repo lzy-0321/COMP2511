@@ -7,9 +7,18 @@ import java.util.Map;
 
 import unsw.response.models.FileInfoResponse;
 
-public abstract class FileHolder {
-    private List<File> fileList = new ArrayList<>();
-    private Map<File, String> sendSchedule = new HashMap<>();
+public class FileHandler {
+    private List<File> fileList;
+    private Map<File, String> sendSchedule;
+
+    public FileHandler() {
+        this.fileList = new ArrayList<File>();
+        this.sendSchedule = new HashMap<File, String>();
+    }
+
+    public boolean isFileListEmpty() {
+        return fileList.isEmpty();
+    }
 
     public File getFile(String filename) {
         for (File file : fileList) {
@@ -140,14 +149,6 @@ public abstract class FileHolder {
         return false;
     }
 
-    public boolean isFileReceiving(File file) {
-        // check if the file is in the receiving list or the file list(completed)
-        if (isFileInList(file, fileList) && !isFileComplete(file)) {
-            return true;
-        }
-        return false;
-    }
-
     public void addFileToSendSchedule(File file, String toId) {
         sendSchedule.put(file, toId);
     }
@@ -228,5 +229,19 @@ public abstract class FileHolder {
 
     public void stopReceivingFile(File file) {
         removeFile(file.getFilename());
+    }
+
+    public void removeTInFileList(File file) {
+        String content = file.getContent();
+        // remove the t letter in the file content
+        content.replace("t", "");
+        file.setContent(content);
+        // update the file in the fileList
+        for (File existingFile : fileList) {
+            if (existingFile.getFilename().equals(file.getFilename())) {
+                fileList.set(fileList.indexOf(existingFile), file);
+                break;
+            }
+        }
     }
 }

@@ -31,4 +31,6 @@ public interface Sender {
     void sendingFile(File file, boolean isComplete);
 
     void stopSendingFile(File file);
+
+    void removeTInFileList(File file);
 }

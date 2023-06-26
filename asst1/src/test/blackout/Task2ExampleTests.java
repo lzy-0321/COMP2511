@@ -114,7 +114,6 @@ public class Task2ExampleTests {
                 controller.getInfo("Satellite1").getFiles().get("FileAlpha"));
 
         controller.simulate(msg.length() * 2);
-        System.out.println(controller.getSendSchedule("DeviceC"));
         assertEquals(new FileInfoResponse("FileAlpha", msg, msg.length(), true),
                 controller.getInfo("Satellite1").getFiles().get("FileAlpha"));
 

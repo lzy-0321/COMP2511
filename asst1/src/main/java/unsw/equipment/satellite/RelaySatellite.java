@@ -1,12 +1,11 @@
-package unsw.satellite;
+package unsw.equipment.satellite;
 
-import unsw.device.Device;
 import unsw.utils.Angle;
 
-public class RelaySatellite extends Satellite {
+public class RelaySatellite extends SatelliteDoesNotHandleFiles {
     public RelaySatellite(String satelliteId, String type, Double height, Angle position) {
         // -1 for maxSend and maxReceive means unlimited
-        super(satelliteId, type, height, position, 1500.0, -1, 300000.0, 0, 0, -1, -1);
+        super(satelliteId, type, height, position, 1500.0, -1, 300000.0);
     }
 
     @Override
@@ -32,12 +31,12 @@ public class RelaySatellite extends Satellite {
 
     @Override
     // Supports all devices
-    public boolean communicable(Device device) {
-        return isCommunicable(device);
+    public boolean communicable(Angle devicePosition, String deviceType) {
+        return isCommunicable(devicePosition);
     }
 
     @Override
-    public boolean communicable(Satellite satellite) {
-        return isCommunicable(satellite);
+    public boolean communicable(Double otherheight, Angle otherposition) {
+        return isCommunicable(otherheight, otherposition);
     }
 }

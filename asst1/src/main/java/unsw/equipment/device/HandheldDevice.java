@@ -1,6 +1,5 @@
-package unsw.device;
+package unsw.equipment.device;
 
-import unsw.satellite.Satellite;
 import unsw.utils.Angle;
 
 public class HandheldDevice extends Device {
@@ -9,7 +8,7 @@ public class HandheldDevice extends Device {
     }
 
     @Override
-    public boolean communicable(Satellite satellite) {
-        return isCommunicable(satellite);
+    public boolean communicable(Double satelliteHigh, Angle satellitePosition, String satelliteType) {
+        return isCommunicable(satelliteHigh, satellitePosition);
     }
 }

@@ -5,13 +5,7 @@ import java.util.List;
 import unsw.file.*;
 
 public interface Receiver {
-    boolean isFileReceiving(File file);
-
-    boolean isFileComplete(File file);
-
     boolean hasRoom(File file);
-
-    boolean hasBandwidthSend();
 
     boolean hasBandwidthReceive();
 
@@ -29,5 +23,5 @@ public interface Receiver {
 
     void receivingFile(File file);
 
-    void stopReceivingFile(File file);
+    boolean stopReceivingFile(File file);
 }

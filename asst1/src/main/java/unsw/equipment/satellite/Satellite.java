@@ -1,13 +1,11 @@
-package unsw.satellite;
+package unsw.equipment.satellite;
 
 import unsw.utils.Angle;
 import unsw.utils.MathsHelper;
+import unsw.equipment.EquipmentInfo;
+import unsw.response.models.EntityInfoResponse;
 
-import unsw.device.*;
-import unsw.file.*;
-import unsw.transmission.*;
-
-public abstract class Satellite extends FileHolder implements Sender, Receiver {
+public abstract class Satellite {
     private String satelliteId;
     private String type;
     private Double height;
@@ -55,6 +53,10 @@ public abstract class Satellite extends FileHolder implements Sender, Receiver {
         this.position = position;
     }
 
+    public EquipmentInfo getInfo() {
+        return new EquipmentInfo(height, position, type);
+    }
+
     public Double getSpeed() {
         return speed;
     }
@@ -87,12 +89,14 @@ public abstract class Satellite extends FileHolder implements Sender, Receiver {
         return maxSendSpeed;
     }
 
+    public abstract EntityInfoResponse getEntityInfo();
+
     // =============
     // for moving satellite
     public Double calculateNewPosition() {
-        Double angle = (this.speed * 180) / (this.getHeight() * Math.PI); // in degrees
-        Double position = this.getPosition().toDegrees();
-        Double newPosition = position + (direction * angle);
+        Double increase = (this.speed * 180) / (height * Math.PI); // in degrees
+        Double oldPosition = position.toDegrees();
+        Double newPosition = oldPosition + (direction * increase);
         // if the new position is greater than 360, then it is the same as subtracting
         // 360
         if (newPosition > 360) {
@@ -110,10 +114,9 @@ public abstract class Satellite extends FileHolder implements Sender, Receiver {
     // only calulates if the device is communicable by satellite, does not care
     // about the type of
     // device
-    public boolean isCommunicable(Device device) {
-        Double satelliteHigh = this.getHeight();
-        Angle satellitePosition = this.getPosition();
-        Angle devicePosition = device.getPosition();
+    public boolean isCommunicable(Angle devicePosition) {
+        Double satelliteHigh = height;
+        Angle satellitePosition = position;
         Double distance = MathsHelper.getDistance(satelliteHigh, satellitePosition, devicePosition);
         Boolean isVisible = MathsHelper.isVisible(satelliteHigh, satellitePosition, devicePosition);
         Double range = this.getRange();
@@ -124,13 +127,13 @@ public abstract class Satellite extends FileHolder implements Sender, Receiver {
         return false;
     }
 
-    public abstract boolean communicable(Device device);
+    public abstract boolean communicable(Angle devicePosition, String deviceType);
 
-    public boolean isCommunicable(Satellite satellite) {
-        Double satelliteHigh = this.getHeight();
-        Angle satellitePosition = this.getPosition();
-        Double otherSatelliteHigh = satellite.getHeight();
-        Angle otherSatellitePosition = satellite.getPosition();
+    public boolean isCommunicable(Double otherheight, Angle otherposition) {
+        Double satelliteHigh = height;
+        Angle satellitePosition = position;
+        Double otherSatelliteHigh = otherheight;
+        Angle otherSatellitePosition = otherposition;
         Double range = this.getRange();
         Double distance = MathsHelper.getDistance(satelliteHigh, satellitePosition, otherSatelliteHigh,
                 otherSatellitePosition);
@@ -143,52 +146,6 @@ public abstract class Satellite extends FileHolder implements Sender, Receiver {
         return false;
     }
 
-    public abstract boolean communicable(Satellite satellite);
+    public abstract boolean communicable(Double otherheight, Angle otherposition);
 
-    // ================
-    // for sending and receiving
-    public boolean hasBandwidthSend() {
-        if (getMaxSendSpeed() > getSendScheduleSize()) {
-            return true;
-        }
-        return false;
-    }
-
-    public boolean hasBandwidthReceive() {
-        if (getMaxReceiveSpeed() > getReceivingSize()) {
-            return true;
-        }
-        return false;
-    }
-
-    // + means still has space
-    // - means no space
-    public int getAvailableFileListSize() {
-        if (getMaxFiles() == -1) {
-            return 1;
-        }
-        return getMaxFiles() - getAllFilesSize();
-    }
-
-    public int getAvailableContentSize() {
-        if (getMaxFileSize() == -1) {
-            return 1;
-        }
-        return getMaxFileSize() - getAllContentSize();
-    }
-
-    public boolean hasRoom(File file) {
-        if (getAvailableFileListSize() > 0 && getAvailableContentSize() > getFileSize(file)) {
-            return true;
-        }
-        return false;
-    }
-
-    public int getSendSpeed() {
-        return getMaxSendSpeed() / getSendScheduleSize();
-    }
-
-    public int getReceiveSpeed() {
-        return getMaxReceiveSpeed() / getReceivingSize();
-    }
 }

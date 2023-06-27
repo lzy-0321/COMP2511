@@ -80,14 +80,13 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
     }
 
     @Override
-    public void receivingFile(File file) {
-        fileHandler.receivingFile(file);
+    public void receivingFile(File file, boolean isComplete) {
+        fileHandler.receivingFile(file, isComplete);
     }
 
     @Override
-    public boolean stopReceivingFile(File file) {
+    public void stopReceivingFile(File file) {
         fileHandler.stopReceivingFile(file);
-        return true;
     }
 
     @Override
@@ -111,8 +110,18 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
     }
 
     @Override
-    public void removeTInFileList(File file) {
-        fileHandler.removeTInFileList(file);
+    public File setSendFile(File file, int index) {
+        return fileHandler.setSendFile(file, index);
+    }
+
+    @Override
+    public File setSendFileWithoutT(File file, int index) {
+        return fileHandler.setSendFileWithoutT(file, index);
+    }
+
+    @Override
+    public void removeTLetter(File file) {
+        fileHandler.removeTLetter(file);
     }
 
     // for sending and receiving
@@ -133,22 +142,22 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
     // + means still has space
     // - means no space
     public int getAvailableFileListSize() {
-        if (getMaxFiles() == -1) {
-            return 1;
-        }
         return getMaxFiles() - fileHandler.getAllFilesSize();
     }
 
     public int getAvailableContentSize() {
-        if (getMaxFileSize() == -1) {
-            return 1;
-        }
         return getMaxFileSize() - fileHandler.getAllContentSize();
     }
 
     public boolean hasRoom(File file) {
-        if (getAvailableFileListSize() > 0 && getAvailableContentSize() > fileHandler.getFileSize(file)) {
+        if (getMaxFiles() == -1 && getMaxFileSize() == -1) {
             return true;
+        } else if (getMaxFiles() == -1 && getMaxFileSize() != -1) {
+            return getAvailableContentSize() > fileHandler.getFileSize(file);
+        } else if (getMaxFiles() != -1 && getMaxFileSize() == -1) {
+            return getAvailableFileListSize() > 0;
+        } else if (getMaxFiles() != -1 && getMaxFileSize() != -1) {
+            return getAvailableFileListSize() > 0 && getAvailableContentSize() > fileHandler.getFileSize(file);
         }
         return false;
     }
@@ -161,4 +170,7 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
         return getMaxReceiveSpeed() / fileHandler.getReceivingSize();
     }
 
+    public boolean isTeleport() {
+        return false;
+    }
 }

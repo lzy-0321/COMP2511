@@ -191,6 +191,21 @@ public class FileHandler {
         return sendFile;
     }
 
+    public File setSendFile(File file, int index) {
+        String content = file.getContent();
+        content = content.substring(index);
+        File sendFile = new File(file.getFilename(), content);
+        return sendFile;
+    }
+
+    public File setSendFileWithoutT(File file, int index) {
+        String content = file.getContent();
+        content = content.substring(index);
+        content = removeTLetter(content);
+        File sendFile = new File(file.getFilename(), content);
+        return sendFile;
+    }
+
     public boolean isFileInList(File file, List<File> list) {
         String fileName = file.getFilename();
         for (File existingFile : list) {
@@ -208,12 +223,16 @@ public class FileHandler {
         }
     }
 
-    public void receivingFile(File file) {
+    public void receivingFile(File file, boolean isComplete) {
         File incompleteFile = getFileInList(fileList, file);
         // add the file content
         incompleteFile.addContent(file.getContent());
         // update the file in the receiveSchedule list
         fileList.set(fileList.indexOf(incompleteFile), incompleteFile);
+        if (isComplete) {
+            // Recalculate the file size
+            incompleteFile.setSize(incompleteFile.getContent().length());
+        }
     }
 
     public boolean isFileCompleteInThisTransfering(File file, int index, int size) {
@@ -231,11 +250,11 @@ public class FileHandler {
         removeFile(file.getFilename());
     }
 
-    public void removeTInFileList(File file) {
+    public void removeTLetter(File file) {
         String content = file.getContent();
         // remove the t letter in the file content
-        content.replace("t", "");
-        file.setContent(content);
+        file.setContent(removeTLetter(content));
+        file.setSize(removeTLetter(content).length());
         // update the file in the fileList
         for (File existingFile : fileList) {
             if (existingFile.getFilename().equals(file.getFilename())) {
@@ -243,5 +262,11 @@ public class FileHandler {
                 break;
             }
         }
+    }
+
+    private String removeTLetter(String content) {
+        // remove the t letter in the file content
+        content = content.replace("t", "");
+        return content;
     }
 }

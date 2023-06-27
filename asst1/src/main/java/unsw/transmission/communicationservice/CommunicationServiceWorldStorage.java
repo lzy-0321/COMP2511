@@ -10,5 +10,8 @@ public interface CommunicationServiceWorldStorage {
 
     List<Satellite> getSatellitesList();
 
+    Device getDevice(String deviceId);
+
     Satellite getSatellite(String satelliteId);
+
 }

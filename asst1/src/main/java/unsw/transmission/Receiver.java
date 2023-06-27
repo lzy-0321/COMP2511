@@ -21,7 +21,7 @@ public interface Receiver {
 
     int getCurrentFileSize(File file);
 
-    void receivingFile(File file);
+    void receivingFile(File file, boolean isComplete);
 
-    boolean stopReceivingFile(File file);
+    void stopReceivingFile(File file);
 }

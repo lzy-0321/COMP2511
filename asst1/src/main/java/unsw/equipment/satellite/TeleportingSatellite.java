@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import unsw.utils.Angle;
-import unsw.file.*;
 
 public class TeleportingSatellite extends SatelliteHandlesFiles {
     private List<Integer> directionList = new ArrayList<Integer>();
@@ -45,27 +44,11 @@ public class TeleportingSatellite extends SatelliteHandlesFiles {
     }
 
     @Override
-    public void stopSendingFile(File file) {
-        this.getFileHandler().stopSendingFile(file);
-        if (this.isTeleport()) {
-            this.removeTInFileList(file);
-        }
-    }
-
-    @Override
-    public boolean stopReceivingFile(File file) {
-        this.getFileHandler().stopReceivingFile(file);
-        if (this.isTeleport()) {
-            return false;
-        }
-        return true;
-    }
-
-    private boolean isTeleport() {
+    public boolean isTeleport() {
         // If the last two digits of the directionList are different, it is teleport
         // If the last two digits of the directionList are the same, then it is not
-        int size = directionList.size();
-        if (directionList.get(size - 1) == directionList.get(size - 2)) {
+        int index = directionList.size();
+        if (directionList.get(index - 1) == directionList.get(index - 2)) {
             return false;
         }
         return true;

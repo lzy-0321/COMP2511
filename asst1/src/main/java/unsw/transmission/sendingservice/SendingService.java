@@ -4,16 +4,19 @@ import java.util.Map;
 
 import unsw.transmission.Receiver;
 import unsw.transmission.Sender;
-import unsw.equipment.EquipmentInfo;
 import unsw.equipment.device.*;
 import unsw.equipment.satellite.*;
 import unsw.file.*;
+import unsw.transmission.communicationservice.CommunicationService;
+import unsw.worldstorage.WorldStorage;
 
 public class SendingService {
+    private CommunicationService communicationService;
     private SendingServiceWorldStorage worldStorage;
 
-    public SendingService(SendingServiceWorldStorage worldStorage) {
+    public SendingService(WorldStorage worldStorage) {
         this.worldStorage = worldStorage;
+        this.communicationService = new CommunicationService(worldStorage);
     }
 
     public void sendingFiles(String fromId) {
@@ -27,15 +30,27 @@ public class SendingService {
         for (Map.Entry<File, String> entry : sendSchedule.entrySet()) {
             File file = entry.getKey();
             String toId = entry.getValue();
-            if (canCommunicable(fromId, toId)) {
+            Receiver to = getReceiver(toId);
+            // if from is a TeleportingSatellite and it is teleporting, then teleport the
+            // file
+            if (from instanceof TeleportingSatellite) {
+                SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) from;
+                if (satelliteHandlesFiles.isTeleport()) {
+                    teleportingFile(fromId, file, toId);
+                    break;
+                }
+            } else if (to instanceof TeleportingSatellite) {
+                SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) to;
+                if (satelliteHandlesFiles.isTeleport()) {
+                    teleportingFile(fromId, file, toId);
+                    break;
+                }
+            }
+            if (communicationService.isCommunicableEntitiesInRange(fromId, toId)) {
                 sendingFile(fromId, file, toId);
             } else {
-                Receiver to = getReceiver(toId);
                 from.stopSendingFile(file);
-                boolean isNotTeleport = to.stopReceivingFile(file);
-                if (isNotTeleport) {
-                    from.removeTInFileList(file);
-                }
+                to.stopReceivingFile(file);
             }
         }
     }
@@ -60,7 +75,28 @@ public class SendingService {
             return;
         }
         from.sendingFile(file, isComplete);
-        to.receivingFile(fileToSend);
+        to.receivingFile(fileToSend, isComplete);
+    }
+
+    private void teleportingFile(String fromId, File file, String toId) {
+        Sender from = getSender(fromId);
+        Receiver to = getReceiver(toId);
+        if (from == null || to == null || file == null) {
+            return;
+        }
+        if (from instanceof TeleportingSatellite) {
+            // send the rest of file without t letter
+            int index = to.getCurrentFileSize(file);
+            File fileToSend = from.setSendFileWithoutT(file, index);
+            boolean isComplete = true;
+            from.sendingFile(file, isComplete);
+            to.receivingFile(fileToSend, isComplete);
+        } else if (to instanceof TeleportingSatellite) {
+            // remove the t letter in sender's file
+            from.removeTLetter(file);
+            from.stopSendingFile(file);
+            to.stopReceivingFile(file);
+        }
     }
 
     private int getTransferSpeed(String fromId, String toId) {
@@ -77,57 +113,13 @@ public class SendingService {
         }
     }
 
-    private boolean canCommunicable(String fromId, String toId) {
-        Sender from = getSender(fromId);
-        Receiver to = getReceiver(toId);
-        if (from == null || to == null) {
-            return false;
-        }
-        // 如果from是device，to是satellite
-        if (from instanceof Device && to instanceof Satellite) {
-            Device fromDevice = (Device) from;
-            Satellite toSatellite = (Satellite) to;
-            EquipmentInfo info = toSatellite.getInfo();
-            return fromDevice.communicable(info.getHeight(), info.getPosition(), info.getType());
-        } else if (from instanceof Satellite && to instanceof Device) {
-            // 如果from是satellite，to是device
-            Satellite fromSatellite = (Satellite) from;
-            Device toDevice = (Device) to;
-            EquipmentInfo info = toDevice.getInfo();
-            return fromSatellite.communicable(info.getPosition(), info.getType());
-        } else if (from instanceof Satellite && to instanceof Satellite) {
-            // 如果from是satellite，to是satellite
-            Satellite fromSatellite = (Satellite) from;
-            Satellite toSatellite = (Satellite) to;
-            EquipmentInfo info = toSatellite.getInfo();
-            return fromSatellite.communicable(info.getPosition(), info.getType());
-        } else {
-            return false;
-        }
-    }
-
-    private Device findDevice(String deviceId) {
-        if (worldStorage.getDevice(deviceId) != null) {
-            return worldStorage.getDevice(deviceId);
-        }
-        return null;
-    }
-
-    // check if the satellite exists
-    private Satellite findSatellite(String satelliteId) {
-        if (worldStorage.getSatellite(satelliteId) != null) {
-            return worldStorage.getSatellite(satelliteId);
-        }
-        return null;
-    }
-
     private Object findEntity(String id) {
-        Device device = findDevice(id);
+        Device device = worldStorage.getDevice(id);
         if (device != null) {
             return device;
         }
 
-        Satellite satellite = findSatellite(id);
+        Satellite satellite = worldStorage.getSatellite(id);
         if (satellite instanceof SatelliteHandlesFiles) {
             return satellite;
         }

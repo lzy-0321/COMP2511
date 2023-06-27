@@ -118,12 +118,12 @@ public class BlackoutController {
         Sender from = getSender(fromId);
         Receiver to = getReceiver(toId);
         File file = from.getFile(fileName);
-        if (file == null) {
-            throw new VirtualFileNotFoundException(fileName);
+        if (from == null || to == null) {
+            return;
         }
         // File doesn't exist on fromId or it's a partial file (hasn't finished
         // transferring)
-        if (from == null || (from.isFileInList(file, from.getFileList()) && !from.isFileComplete(file))) {
+        if (file == null || (from.isFileInList(file, from.getFileList()) && !from.isFileComplete(file))) {
             throw new VirtualFileNotFoundException(fileName);
         }
         // Satellite Bandwidth is full
@@ -131,7 +131,7 @@ public class BlackoutController {
             throw new VirtualFileNoBandwidthException(fileName);
         }
         // File already exists on toId or is currently downloading to the target
-        if (to == null || to.isFileInList(file, to.getFileList())) {
+        if (to.isFileInList(file, to.getFileList())) {
             throw new VirtualFileAlreadyExistsException(fileName);
         }
         // No room on the receiver

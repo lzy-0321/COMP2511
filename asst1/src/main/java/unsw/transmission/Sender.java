@@ -28,9 +28,13 @@ public interface Sender {
 
     File setSendFile(File file, int index, int size);
 
+    File setSendFile(File file, int index);
+
+    File setSendFileWithoutT(File file, int index);
+
     void sendingFile(File file, boolean isComplete);
 
     void stopSendingFile(File file);
 
-    void removeTInFileList(File file);
+    void removeTLetter(File file);
 }

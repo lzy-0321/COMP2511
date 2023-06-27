@@ -146,14 +146,13 @@ public abstract class Device implements EntityInfo, Sender, Receiver {
     }
 
     @Override
-    public void receivingFile(File file) {
-        fileHandler.receivingFile(file);
+    public void receivingFile(File file, boolean isComplete) {
+        fileHandler.receivingFile(file, isComplete);
     }
 
     @Override
-    public boolean stopReceivingFile(File file) {
+    public void stopReceivingFile(File file) {
         fileHandler.stopReceivingFile(file);
-        return true;
     }
 
     @Override
@@ -177,7 +176,17 @@ public abstract class Device implements EntityInfo, Sender, Receiver {
     }
 
     @Override
-    public void removeTInFileList(File file) {
-        fileHandler.removeTInFileList(file);
+    public File setSendFile(File file, int index) {
+        return fileHandler.setSendFile(file, index);
+    }
+
+    @Override
+    public File setSendFileWithoutT(File file, int index) {
+        return fileHandler.setSendFileWithoutT(file, index);
+    }
+
+    @Override
+    public void removeTLetter(File file) {
+        fileHandler.removeTLetter(file);
     }
 }

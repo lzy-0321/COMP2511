@@ -58,7 +58,7 @@ public class BlackoutController {
         File file = new File(filename, content);
         // check if the device exists
         Device device = findDevice(deviceId);
-        if (device != null && isFileUnique(filename)) {
+        if (device != null) {
             // add the file to the device
             device.setFile(file);
             return;
@@ -172,15 +172,6 @@ public class BlackoutController {
             return worldStorage.getSatellite(satelliteId);
         }
         return null;
-    }
-
-    private boolean isFileUnique(String filename) {
-        for (Device device : worldStorage.getDevicesList()) {
-            if (device.getFileInfoMap().containsKey(filename)) {
-                return false;
-            }
-        }
-        return true;
     }
 
     private Object findEntity(String id) {

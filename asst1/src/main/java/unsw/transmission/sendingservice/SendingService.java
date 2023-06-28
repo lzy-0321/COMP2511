@@ -31,21 +31,12 @@ public class SendingService {
             File file = entry.getKey();
             String toId = entry.getValue();
             Receiver to = getReceiver(toId);
-            // if from is a TeleportingSatellite and it is teleporting, then teleport the
-            // file
-            if (from instanceof TeleportingSatellite) {
-                SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) from;
-                if (satelliteHandlesFiles.isTeleport()) {
-                    teleportingFile(fromId, file, toId);
-                    break;
-                }
-            } else if (to instanceof TeleportingSatellite) {
-                SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) to;
-                if (satelliteHandlesFiles.isTeleport()) {
-                    teleportingFile(fromId, file, toId);
-                    break;
-                }
+
+            // all satellites special situation is handled in isSpecialSituation()
+            if (isSpecialSituation(fromId, file, toId)) {
+                break;
             }
+
             if (communicationService.isCommunicableEntitiesInRange(fromId, toId)) {
                 sendingFile(fromId, file, toId);
             } else {
@@ -76,6 +67,27 @@ public class SendingService {
         }
         from.sendingFile(file, isComplete);
         to.receivingFile(fileToSend, isComplete);
+    }
+
+    // if from is a TeleportingSatellite and it is teleporting, then teleport the
+    // file
+    private boolean isSpecialSituation(String fromId, File file, String toId) {
+        Sender from = getSender(fromId);
+        Receiver to = getReceiver(toId);
+        if (from instanceof TeleportingSatellite) {
+            SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) from;
+            if (satelliteHandlesFiles.isTeleport()) {
+                teleportingFile(fromId, file, toId);
+                return true;
+            }
+        } else if (to instanceof TeleportingSatellite) {
+            SatelliteHandlesFiles satelliteHandlesFiles = (SatelliteHandlesFiles) to;
+            if (satelliteHandlesFiles.isTeleport()) {
+                teleportingFile(fromId, file, toId);
+                return true;
+            }
+        }
+        return false;
     }
 
     private void teleportingFile(String fromId, File file, String toId) {

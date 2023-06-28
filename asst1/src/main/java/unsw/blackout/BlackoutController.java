@@ -106,12 +106,7 @@ public class BlackoutController {
     public List<String> communicableEntitiesInRange(String id) {
         Sender sender = getSender(id);
         CommunicationService communicationService = new CommunicationService(worldStorage);
-        if (sender instanceof Device) {
-            return communicationService.communicableEntitiesInRange((Device) sender);
-        } else if (sender instanceof Satellite) {
-            return communicationService.communicableEntitiesInRange((Satellite) sender);
-        }
-        return null;
+        return communicationService.communicableEntitiesInRange(sender);
     }
 
     public void sendFile(String fileName, String fromId, String toId) throws FileTransferException {
@@ -141,7 +136,6 @@ public class BlackoutController {
 
         from.addFileToSendSchedule(file, toId);
         to.addFileInfo(file);
-
     }
 
     public void createDevice(String deviceId, String type, Angle position, boolean isMoving) {

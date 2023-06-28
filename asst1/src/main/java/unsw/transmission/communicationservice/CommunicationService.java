@@ -21,7 +21,16 @@ public class CommunicationService {
         this.satellitesList = worldStorage.getSatellitesList();
     }
 
-    public List<String> communicableEntitiesInRange(Device device) {
+    public List<String> communicableEntitiesInRange(Sender sender) {
+        if (sender instanceof Device) {
+            return communicableEntitiesInRange((Device) sender);
+        } else if (sender instanceof Satellite) {
+            return communicableEntitiesInRange((Satellite) sender);
+        }
+        return new ArrayList<String>();
+    }
+
+    private List<String> communicableEntitiesInRange(Device device) {
         List<String> communicableList = new ArrayList<String>();
         if (satellitesList.isEmpty()) {
             return communicableList;
@@ -46,7 +55,7 @@ public class CommunicationService {
     }
 
     // for satellite, create communication list between the satellites and devices
-    public List<String> communicableEntitiesInRange(Satellite satellite) {
+    private List<String> communicableEntitiesInRange(Satellite satellite) {
         List<String> communicableList = new ArrayList<String>();
         // find the satellites in the range of the satellite
         for (Satellite otherSatellite : satellitesList) {
@@ -189,18 +198,9 @@ public class CommunicationService {
             return false;
         }
         // Check whether toId is in the communicableList of fromId
-        if (from instanceof Device) {
-            Device device = (Device) from;
-            List<String> communicableList = communicableEntitiesInRange(device);
-            if (communicableList.contains(toId)) {
-                return true;
-            }
-        } else if (from instanceof Satellite) {
-            Satellite satellite = (Satellite) from;
-            List<String> communicableList = communicableEntitiesInRange(satellite);
-            if (communicableList.contains(toId)) {
-                return true;
-            }
+        List<String> communicableList = communicableEntitiesInRange(from);
+        if (communicableList.contains(toId)) {
+            return true;
         }
         return false;
     }

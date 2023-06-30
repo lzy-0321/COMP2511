@@ -134,11 +134,17 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
         if (getMaxFiles() == -1 && getMaxFileSize() == -1) {
             return true;
         } else if (getMaxFiles() == -1 && getMaxFileSize() != -1) {
-            return getAvailableContentSize() > fileHandler.getFileSize(file);
+            if (getAvailableContentSize() >= fileHandler.getFileSize(file)) {
+                return true;
+            }
+            // else if (getAvailableContentSize() < fileHandler.getFileSize(file)) {
+            // int needSize = fileHandler.getFileSize(file) - getAvailableContentSize();
+            // return fileHandler.removeFileFromTempFileList(needSize);
+            // }
         } else if (getMaxFiles() != -1 && getMaxFileSize() == -1) {
             return getAvailableFileListSize() > 0;
         } else if (getMaxFiles() != -1 && getMaxFileSize() != -1) {
-            return getAvailableFileListSize() > 0 && getAvailableContentSize() > fileHandler.getFileSize(file);
+            return getAvailableFileListSize() > 0 && getAvailableContentSize() >= fileHandler.getFileSize(file);
         }
         return false;
     }
@@ -154,4 +160,16 @@ public abstract class SatelliteHandlesFiles extends Satellite implements EntityI
     public boolean isTeleport() {
         return false;
     }
+
+    // public void moveFileToTempFileList(String fromId) {
+    // fileHandler.moveFileToTempFileList(fromId);
+    // }
+
+    // public Map<File, String> getTempFile() {
+    // return fileHandler.getTempFile();
+    // }
+
+    // public void moveFileToFileList(File file) {
+    // fileHandler.moveFileToFileList(file);
+    // }
 }

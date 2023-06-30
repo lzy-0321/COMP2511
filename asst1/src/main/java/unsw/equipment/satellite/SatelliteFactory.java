@@ -10,6 +10,8 @@ public class SatelliteFactory {
             return new TeleportingSatellite(satelliteId, type, height, position);
         } else if (type.equals("RelaySatellite")) {
             return new RelaySatellite(satelliteId, type, height, position);
+        } else if (type.equals("ElephantSatellite")) {
+            return new ElephantSatellite(satelliteId, type, height, position);
         }
         throw new IllegalArgumentException("Invalid satellite type: " + type);
     }

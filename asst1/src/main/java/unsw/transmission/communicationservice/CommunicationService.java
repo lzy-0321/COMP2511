@@ -63,7 +63,7 @@ public class CommunicationService {
                 continue;
             }
             EquipmentInfo info = otherSatellite.getInfo();
-            if (satellite.communicable(info.getHeight(), info.getPosition())
+            if (satellite.communicable(info.getHeight(), info.getPosition(), info.getType())
                     && !communicableList.contains(otherSatellite.getSatelliteId())) {
                 communicableList.add(otherSatellite.getSatelliteId());
                 if (isRelaySatellite(otherSatellite.getSatelliteId())) {
@@ -144,7 +144,7 @@ public class CommunicationService {
             for (Satellite otherSatellite : satellitesList) {
                 if (!otherSatellite.equals(satellite)) {
                     EquipmentInfo info = otherSatellite.getInfo();
-                    if (satellite.communicable(info.getHeight(), info.getPosition())
+                    if (satellite.communicable(info.getHeight(), info.getPosition(), info.getType())
                             && !communicableList.contains(otherSatellite.getSatelliteId())) {
                         communicableList.add(otherSatellite.getSatelliteId());
                     }
@@ -174,7 +174,7 @@ public class CommunicationService {
             for (Satellite otherSatellite : satellitesList) {
                 if (!otherSatellite.equals(relaySatellite) && !otherSatellite.equals(satellite)) {
                     EquipmentInfo info = otherSatellite.getInfo();
-                    if (relaySatellite.communicable(info.getHeight(), info.getPosition())
+                    if (relaySatellite.communicable(info.getHeight(), info.getPosition(), info.getType())
                             && !communicableList.contains(otherSatellite.getSatelliteId())) {
                         communicableList.add(otherSatellite.getSatelliteId());
                     }

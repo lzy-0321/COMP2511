@@ -39,7 +39,7 @@ public class TeleportingSatellite extends SatelliteHandlesFiles {
     }
 
     @Override
-    public boolean communicable(Double otherheight, Angle otherposition) {
+    public boolean communicable(Double otherheight, Angle otherposition, String otherType) {
         return isCommunicable(otherheight, otherposition);
     }
 

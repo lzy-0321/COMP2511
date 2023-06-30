@@ -146,6 +146,6 @@ public abstract class Satellite {
         return false;
     }
 
-    public abstract boolean communicable(Double otherheight, Angle otherposition);
+    public abstract boolean communicable(Double otherheight, Angle otherposition, String otherType);
 
 }

@@ -10,7 +10,7 @@ Second implementation
 
 In the revised approach, the operation and storage of files are separated from the Device and Satellite classes. A new class named FileHandler is introduced to handle all file-related functionalities. If a type of Device or Satellite requires file storage, a FileHandler is included as a private variable.
 
- 
+
 
 BlackoutController 
 
@@ -43,4 +43,10 @@ An EquipmentInfo class is created, which includes height, position, and type. Th
 
 DeviceFactory and SatelliteFactory classes are created, which are used to create devices or satellites of different types. This allows the controller to focus solely on creation, while the factory handles type discernment. When different types of devices or satellites are added, there is no need to edit the controller. 
 
-Another possible improvement is to create a superclass called Equipment. Device and Satellite would then serve as subclasses of this Equipment superclass.
+Future Improvement(maybe):
+
+Create a superclass called Equipment. Device and Satellite would then serve as subclasses of this Equipment superclass.
+
+Change all Lists to Maps, can optimise the code to reduce the time required for lookup a device or a satellite or a file.
+
+For ElephantSatellite problems, i think we can create a new Map in Filehandler, it be used to store the files marked as transient and fromId. In sendingFiles function, we add operations to this new map, create a new send relation. It can be thinks as receiver asks files from sender.

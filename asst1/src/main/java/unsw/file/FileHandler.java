@@ -10,10 +10,12 @@ import unsw.response.models.FileInfoResponse;
 public class FileHandler {
     private List<File> fileList;
     private Map<File, String> sendSchedule;
+    // private Map<File, String> tempFile;
 
     public FileHandler() {
         this.fileList = new ArrayList<File>();
         this.sendSchedule = new HashMap<File, String>();
+        // this.tempFile = new HashMap<File, String>();
     }
 
     public boolean isFileListEmpty() {
@@ -56,10 +58,9 @@ public class FileHandler {
     }
 
     public void removeFile(String filename) {
-        List<File> files = getFileList();
-        for (File file : files) {
+        for (File file : fileList) {
             if (file.getFilename().equals(filename)) {
-                files.remove(file);
+                fileList.remove(file);
                 break;
             }
         }
@@ -75,6 +76,10 @@ public class FileHandler {
     }
 
     public int getAllFilesSize() {
+        // if (tempFile == null) {
+        // return fileList.size();
+        // }
+        // return fileList.size() + tempFile.size();
         return fileList.size();
     }
 
@@ -83,9 +88,12 @@ public class FileHandler {
         for (File file : fileList) {
             size += file.getSize();
         }
-        for (File file : sendSchedule.keySet()) {
-            size += file.getSize();
-        }
+        // if (tempFile == null) {
+        // return size;
+        // }
+        // for (File file : tempFile.keySet()) {
+        // size += file.getCurrentSize();
+        // }
         return size;
     }
 
@@ -130,6 +138,13 @@ public class FileHandler {
                     isComplete);
             fileInfoMap.put(file.getFilename(), fileInfo);
         }
+        // for (File file : getTempFile().keySet()) {
+        // boolean isComplete = isFileComplete(file);
+        // FileInfoResponse fileInfo = new FileInfoResponse(file.getFilename(),
+        // file.getContent(), file.getSize(),
+        // isComplete);
+        // fileInfoMap.put(file.getFilename(), fileInfo);
+        // }
         return fileInfoMap;
     }
 
@@ -164,6 +179,117 @@ public class FileHandler {
     public int getSendScheduleSize() {
         return sendSchedule.size();
     }
+
+    // public Map<File, String> getTempFile() {
+    // return tempFile;
+    // }
+
+    // public void setTempFile(File file, String fromId) {
+    // tempFile.put(file, fromId);
+    // }
+
+    // public void removeTempFile(File file) {
+    // // remove the file from the temp file list by filename
+    // for (File existingFile : tempFile.keySet()) {
+    // if (existingFile.getFilename().equals(file.getFilename())) {
+    // tempFile.remove(existingFile);
+    // break;
+    // }
+    // }
+    // }
+
+    // public File getFileFromTempFileList(String filename) {
+    // for (File file : tempFile.keySet()) {
+    // if (file.getFilename().equals(filename)) {
+    // return file;
+    // }
+    // }
+    // return null;
+    // }
+
+    // public void moveFileToTempFileList(String fromId) {
+    // List<File> filesToRemove = new ArrayList<>();
+    // for (File file : fileList) {
+    // if (!isFileComplete(file)) {
+    // tempFile.put(file, fromId);
+    // filesToRemove.add(file);
+    // }
+    // }
+    // for (File file : filesToRemove) {
+    // removeFile(file.getFilename());
+    // }
+    // }
+
+    // public void moveFileToFileList(File file) {
+    // for (File existingFile : tempFile.keySet()) {
+    // if (existingFile.getFilename().equals(file.getFilename())) {
+    // fileList.add(existingFile);
+    // tempFile.remove(existingFile);
+    // break;
+    // }
+    // }
+    // }
+
+    // public int getAllSizeInTemp() {
+    // int size = 0;
+    // for (File file : tempFile.keySet()) {
+    // size += file.getCurrentSize();
+    // }
+    // return size;
+    // }
+
+    // public boolean removeFileFromTempFileList(int needSize) {
+    // // Determine the size needed for removal
+    // // Check if the size needed is more than the total size of all files in the
+    // temp
+    // // list
+    // if (needSize < getAllSizeInTemp()) {
+    // return false;
+    // }
+    // // Sort all files in the temp list by their size
+    // List<File> sortedFiles =
+    // tempFile.keySet().stream().sorted(Comparator.comparing(File::getCurrentSize))
+    // .collect(Collectors.toList());
+    // // Search for the smallest file that is larger than or equal to sizeNeeded
+    // File smallestLargerFile = null;
+    // for (File f : sortedFiles) {
+    // if (f.getCurrentSize() >= needSize) {
+    // smallestLargerFile = f;
+    // break;
+    // }
+    // }
+    // // List for storing the files to remove
+    // List<File> filesToRemove = new ArrayList<>();
+    // // Use the greedy algorithm to determine which files to remove from the temp
+    // // file list
+    // int totalSize = 0;
+    // for (File smallestFile : sortedFiles) {
+    // if (totalSize >= needSize) {
+    // break;
+    // }
+    // filesToRemove.add(smallestFile);
+    // totalSize += smallestFile.getCurrentSize();
+    // }
+    // // Compare the smallest file larger than sizeNeeded and the total size of
+    // // smallest files,
+    // // remove whichever has the smallest size
+    // if (smallestLargerFile == null || (totalSize <
+    // smallestLargerFile.getCurrentSize())) {
+    // for (File fileToRemove : filesToRemove) {
+    // removeTempFile(fileToRemove);
+    // }
+    // } else {
+    // removeTempFile(smallestLargerFile);
+    // }
+    // return true;
+    // }
+
+    // public boolean isTempFileEmpty() {
+    // if (tempFile == null) {
+    // return true;
+    // }
+    // return tempFile.isEmpty();
+    // }
 
     public void addFileInfo(File file) {
         // add file into fileList without content
@@ -218,7 +344,7 @@ public class FileHandler {
 
     public void sendingFile(File file, boolean isComplete) {
         // check if the file is in the sending list
-        if (isComplete) {
+        if (isComplete && sendSchedule.containsKey(file)) {
             sendSchedule.remove(file);
         }
     }

@@ -37,4 +37,7 @@ public interface Sender {
     void stopSendingFile(File file);
 
     void removeTLetter(File file);
+
+    // Map<File, String> getTempFile();
+
 }

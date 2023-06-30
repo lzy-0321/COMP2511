@@ -169,4 +169,17 @@ public abstract class Device implements EntityInfo, Sender, Receiver {
     public void removeTLetter(File file) {
         fileHandler.removeTLetter(file);
     }
+
+    // public Map<File, String> getTempFile() {
+    // return fileHandler.getTempFile();
+    // }
+
+    // public void moveFileToFileList(File file) {
+    // fileHandler.moveFileToFileList(file);
+    // }
+
+    // public void moveFileToTempFileList(String fromId) {
+    // fileHandler.moveFileToTempFileList(fromId);
+    // }
+
 }

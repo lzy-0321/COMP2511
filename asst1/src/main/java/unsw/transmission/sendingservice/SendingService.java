@@ -44,6 +44,20 @@ public class SendingService {
                 to.stopReceivingFile(file);
             }
         }
+        // if receiveSchedule is not empty, then receive file
+        // Map<File, String> tempFile = from.getTempFile();
+        // for (Map.Entry<File, String> entry : tempFile.entrySet()) {
+        // File currentFile = entry.getKey();
+        // String newFromId = entry.getValue();
+        // String newToId = fromId;
+        // Sender newFrom = getSender(newFromId);
+        // File sendFile = newFrom.getFile(currentFile.getFilename());
+        // Receiver to = getReceiver(newToId);
+        // if (communicationService.isCommunicableEntitiesInRange(newFromId, newToId)) {
+        // to.moveFileToFileList(currentFile);
+        // sendingFile(newFromId, sendFile, newToId);
+        // }
+        // }
     }
 
     private void sendingFile(String fromId, File file, String toId) {
@@ -87,6 +101,14 @@ public class SendingService {
                 return true;
             }
         }
+        // else if (to instanceof ElephantSatellite) {
+        // if (!communicationService.isCommunicableEntitiesInRange(fromId, toId)) {
+        // // 将fileList中的未传输完的文件移动到tempFileList中
+        // to.moveFileToTempFileList(fromId);
+        // from.stopSendingFile(file);
+        // return true;
+        // }
+        // }
         return false;
     }
 

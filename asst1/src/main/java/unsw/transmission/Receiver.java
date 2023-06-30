@@ -24,4 +24,9 @@ public interface Receiver {
     void receivingFile(File file, boolean isComplete);
 
     void stopReceivingFile(File file);
+
+    // void moveFileToFileList(File file);
+
+    // void moveFileToTempFileList(String fromId);
+
 }

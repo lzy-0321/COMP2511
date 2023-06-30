@@ -234,7 +234,80 @@ public class Task2ExampleTests {
 
         assertEquals(new FileInfoResponse("FileAlpha", msgWithSomeT, msgWithSomeT.length(), true),
                 controller.getInfo("DeviceC").getFiles().get("FileAlpha"));
+
+        // remove device and satellite
+        controller.removeDevice("DeviceB");
+        controller.removeDevice("DeviceC");
+        controller.removeSatellite("Satellite1");
     }
+
+    // @Test
+    // public void testForElephanSatellite() {
+    // // ElephantSatellite receive file from device
+    // controller.createDevice("DeviceB", "DesktopDevice", Angle.fromDegrees(0));
+    // controller.createSatellite("Satellite1", "ElephantSatellite", 199980 +
+    // RADIUS_OF_JUPITER, Angle.fromDegrees(0));
+
+    // String longMsg42 = "HeyHeyHeyHeyHeyHeyHeyHeyHeyHeyHeyHeyHeyHey";
+
+    // controller.addFileToDevice("DeviceB", "FileAlpha", longMsg42);
+    // assertDoesNotThrow(() -> controller.sendFile("FileAlpha", "DeviceB",
+    // "Satellite1"));
+    // controller.simulate(2);
+    // assertNotEquals(new FileInfoResponse("FileAlpha", longMsg42,
+    // longMsg42.length(), true),
+    // controller.getInfo("Satellite1").getFiles().get("FileAlpha"));
+    // controller.simulate(677);
+    // System.out.println(controller.communicableEntitiesInRange("DeviceB"));
+    // System.out.println(controller.getInfo("Satellite1"));
+    // assertEquals(new FileInfoResponse("FileAlpha", longMsg42, longMsg42.length(),
+    // true),
+    // controller.getInfo("Satellite1").getFiles().get("FileAlpha"));
+
+    // // remove device and satellite
+    // controller.removeDevice("DeviceB");
+    // controller.removeSatellite("Satellite1");
+
+    // // ElephantSatellite receive file with no room to store
+    // controller.createDevice("DeviceB", "DesktopDevice", Angle.fromDegrees(0));
+    // controller.createSatellite("Satellite1", "ElephantSatellite", 199900 +
+    // RADIUS_OF_JUPITER, Angle.fromDegrees(0));
+    // controller.addFileToDevice("DeviceB", "FileAlpha", longMsg42);
+    // assertDoesNotThrow(() -> controller.sendFile("FileAlpha", "DeviceB",
+    // "Satellite1"));
+    // controller.simulate(1);
+    // String msg6 = "HeyHey";
+    // String msg12 = "HeyHeyHeyHey";
+    // String msg29 = "HeyHeyHeyHeyHeyHeyHeyHeyHeyHe";
+    // controller.addFileToDevice("DeviceB", "FileBate", msg29);
+    // assertDoesNotThrow(() -> controller.sendFile("FileBate", "DeviceB",
+    // "Satellite1"));
+    // controller.simulate(1);
+    // controller.addFileToDevice("DeviceB", "FileCat", msg12);
+    // assertDoesNotThrow(() -> controller.sendFile("FileCat", "DeviceB",
+    // "Satellite1"));
+    // controller.simulate(1);
+    // controller.addFileToDevice("DeviceB", "FileDog", msg6);
+    // assertDoesNotThrow(() -> controller.sendFile("FileDog", "DeviceB",
+    // "Satellite1"));
+    // controller.simulate(2);
+    // // now the satellite is full with 4 temp files
+    // // FileAlpha with 41 bytes
+    // // FileBate with 21 bytes
+    // // FileCat with 11 bytes
+    // // FileDog with 5 bytes
+    // System.out.println(controller.getInfo("Satellite1"));
+    // controller.simulate(338);
+    // controller.createDevice("DeviceC", "DesktopDevice", Angle.fromDegrees(180));
+    // System.out.println(controller.communicableEntitiesInRange("DeviceC"));
+    // controller.addFileToDevice("DeviceC", "FileEdge", msg12);
+    // // According to my algorithm FileCat and FileDog will be deleted
+    // // FileEdge will be stored
+    // assertDoesNotThrow(() -> controller.sendFile("FileEdge", "DeviceC",
+    // "Satellite1"));
+    // assertEquals(null,
+    // controller.getInfo("Satellite1").getFiles().get("FileCat"));
+    // }
 
     @Test
     public void testRelayMovement() {

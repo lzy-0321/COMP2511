@@ -36,7 +36,7 @@ public class RelaySatellite extends SatelliteDoesNotHandleFiles {
     }
 
     @Override
-    public boolean communicable(Double otherheight, Angle otherposition) {
+    public boolean communicable(Double otherheight, Angle otherposition, String otherType) {
         return isCommunicable(otherheight, otherposition);
     }
 }

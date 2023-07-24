@@ -1,6 +1,7 @@
 package graph;
 
 import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotEquals;
 
 import java.util.Iterator;
 
@@ -151,5 +152,14 @@ public class GraphTest {
         assertEquals(iter1.next(), iter2.next());
         assertEquals(iter1.next(), iter2.next());
         assertFalse(iter1.hasNext());
+    }
+
+    @Test
+    public void testTwoIterators() {
+        Graph<Integer> graph = setupGraphOfIntegers();
+
+        Iterator<Integer> iter1 = graph.iterator();
+        Iterator<Integer> iter2 = graph.iterator();
+        assertNotEquals(iter1.next(), iter2.next());
     }
 }

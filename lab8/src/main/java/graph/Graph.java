@@ -3,8 +3,12 @@ package graph;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Queue;
+import java.util.Set;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 /**
  * A class that implements an undirected graph using a HashMap.
@@ -14,9 +18,11 @@ import java.util.Iterator;
  *
  * @author Nick Patrikeos
  */
-public class Graph<N extends Comparable<N>> implements Iterable<N> {
+public class Graph<N extends Comparable<N>> implements Iterable<N>, Iterator<N> {
     private HashMap<N, List<N>> graph = new HashMap<N, List<N>>();
     private N firstNode = null;
+    private Queue<N> queue = new LinkedList<>();
+    private Set<N> visited = new HashSet<>();
 
     /**
      * Adds the given node to the graph
@@ -24,6 +30,8 @@ public class Graph<N extends Comparable<N>> implements Iterable<N> {
     public void addNode(N node) {
         if (firstNode == null) {
             firstNode = node;
+            queue.add(node);
+            visited.add(node);
         }
         graph.put(node, new ArrayList<N>());
     }
@@ -89,6 +97,27 @@ public class Graph<N extends Comparable<N>> implements Iterable<N> {
         if (firstNode == null) {
             return Collections.emptyIterator();
         }
-        return new BreadthFirstGraphIterator<>(this, firstNode);
+        return this;
+    }
+
+    @Override
+    public boolean hasNext() {
+        return !queue.isEmpty();
+    }
+
+    @Override
+    public N next() {
+        if (!hasNext()) {
+            return null;
+        }
+        N current = queue.remove();
+        List<N> neighbours = getAdjacentNodes(current);
+        for (N neighbour : neighbours) {
+            if (!visited.contains(neighbour)) {
+                queue.add(neighbour);
+                visited.add(neighbour);
+            }
+        }
+        return current;
     }
 }
